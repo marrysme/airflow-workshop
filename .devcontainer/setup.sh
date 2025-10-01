@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Installing Airflow (this may take a minute)..."
-
 export AIRFLOW_HOME="$PWD/.airflow"
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
 export AIRFLOW__WEBSERVER__EXPOSE_CONFIG=False
@@ -17,9 +15,9 @@ CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${A
 python -m pip install "apache-airflow==${AF_VER}" --constraint "${CONSTRAINT_URL}"
 
 airflow db init
-airflow users create   --username admin   --firstname Admin   --lastname User   --role Admin   --email admin@example.com   --password admin
+airflow users create \
+  --username admin --firstname Admin --lastname User \
+  --role Admin --email admin@example.com --password admin
 
-airflow webserver -p 8080 -D
+airflow webserver --hostname 0.0.0.0 --port 8080 -D
 airflow scheduler -D
-
-echo "Airflow is starting. When port 8080 is forwarded, open it to see the UI."
